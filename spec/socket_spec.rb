@@ -1,12 +1,13 @@
 describe LogStash4r::Socket do
   subject { LogStash4r::Socket.new(host, port) }
 
-  let(:host) { double('host') }
-  let(:port) { double('port') }
+  let(:host) { 'www.google.com' }
+  let(:port) { 80 }
   let(:socket) { double('socket') }
 
   before do
-    TCPSocket.stub(:new).and_return(socket)
+    ::Socket.stub(:new).and_return(socket)
+    socket.stub(:connect)
   end
 
   context 'write success' do

@@ -2,11 +2,15 @@ require 'socket'
 
 module LogStash4r
   class Socket
-    attr_reader :host, :port
 
-    def initialize(host, port)
-      @host = host
-      @port = port
+    TRANSPORT_TYPES = {
+      udp: :DGRAM,
+      tcp: :STREAM,
+    }
+
+    def initialize(host, port, type = :udp)
+      @socket = ::Socket.new(:INET, TRANSPORT_TYPES.fetch(type))
+      @socket.connect(::Socket.pack_sockaddr_in(port, host))
     end
 
     def write(message)
@@ -20,8 +24,7 @@ module LogStash4r
     end
 
     private
-    def socket
-      @socket ||= TCPSocket.new(host, port)
-    end
+
+    attr_reader :socket
   end
 end

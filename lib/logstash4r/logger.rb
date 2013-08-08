@@ -5,8 +5,8 @@ require 'logstash4r/socket'
 
 module LogStash4r
   class Logger < ::Logger
-    def initialize(host, port)
-      super(LogStash4r::Socket.new(host, port))
+    def initialize(host, port, socket_type = :udp)
+      super(LogStash4r::Socket.new(host, port, socket_type))
     end
 
     def format_message(severity, time, progname, message)

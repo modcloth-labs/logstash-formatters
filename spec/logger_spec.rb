@@ -3,13 +3,14 @@ require 'logstash4r'
 describe LogStash4r::Logger do
   subject { LogStash4r::Logger.new(host, port) }
 
-  let(:host) { double('host') }
-  let(:port) { double('port') }
+  let(:host) { 'localhost' }
+  let(:port) { '80' }
   let(:socket) { double('socket').as_null_object }
   let(:now) { Time.now }
 
   before do
-    TCPSocket.stub(new: socket)
+    ::Socket.stub(:new).and_return(socket)
+    socket.stub(:connect)
     Time.stub(now: now)
   end
 
