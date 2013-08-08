@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
   s.homepage = ''
   s.license = 'MIT'
 
-  s.add_runtime_dependency 'logstash-event'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rake'
 end

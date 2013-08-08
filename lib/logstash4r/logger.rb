@@ -1,31 +1,45 @@
 require 'json'
 require 'socket'
-require 'logstash-event'
+require 'logger'
 
 module LogStash4r
-  class Logger
+  class Logger < ::Logger
     attr_reader :host, :port, :options
 
-    def initialize(host, port, options = {})
+    def initialize(host, port)
       @host = host
       @port = port
-      @options = options
+      super(socket)
     end
 
-    %w(debug info warn error fatal).each do |severity|
-      define_method(severity.to_sym) do |message, message_options = {}|
-        event = LogStash::Event.new
+    def format_message(severity, time, progname, message)
+      event = default_message(severity)
 
-        message_options = options.merge(message_options)
-
-        message_options.each do |key, value|
-          event["@#{key}"] = value
-        end
-
-        event.message = message
-
-        socket.write("#{event.to_json}\n")
+      unless message.is_a?(Hash)
+        message = {:@message => message.to_s}
       end
+
+      message.each do |key, value|
+        if key == :@fields
+          event[:@fields] = value.merge(event[:@fields])
+        elsif (key.to_s[0] == '@')
+          event[key] = value
+        else
+          event[:@fields][key] = value
+        end
+      end
+
+      "#{event.to_json}\n"
+    end
+
+    def default_message(severity)
+      {
+        :@source => ::Socket::gethostname,
+        :@timestamp => Time.now,
+        :@tags => [],
+        :@fields => {severity: severity},
+        :@message => ''
+      }
     end
 
     private
