@@ -9,4 +9,8 @@ Gem::Specification.new do |s|
   s.files = ['lib/logstash4r.rb']
   s.homepage = ''
   s.license = 'MIT'
+
+  s.add_runtime_dependency 'logstash-event'
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'rake'
 end
