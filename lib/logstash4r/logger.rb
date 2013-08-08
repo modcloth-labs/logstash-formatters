@@ -1,15 +1,12 @@
 require 'json'
 require 'socket'
 require 'logger'
+require 'logstash4r/socket'
 
 module LogStash4r
   class Logger < ::Logger
-    attr_reader :host, :port, :options
-
     def initialize(host, port)
-      @host = host
-      @port = port
-      super(socket)
+      super(LogStash4r::Socket.new(host, port))
     end
 
     def format_message(severity, time, progname, message)
@@ -40,11 +37,6 @@ module LogStash4r
         :@fields => {severity: severity},
         :@message => ''
       }
-    end
-
-    private
-    def socket
-      @socket ||= TCPSocket.new(host, port)
     end
   end
 end
