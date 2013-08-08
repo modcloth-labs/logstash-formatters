@@ -1,2 +1,1 @@
-class Logstash4r
-end
+require 'logstash4r/logger'

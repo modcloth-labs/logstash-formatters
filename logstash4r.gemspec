@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'logstash4r'
-  s.version = '0.0.1'
+  s.version = '0.0.2'
   s.date = '2013-08-08'
   s.summary = 'Logstash4r'
   s.description= 'Logstash logger for ruby'
