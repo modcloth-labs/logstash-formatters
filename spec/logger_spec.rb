@@ -14,18 +14,52 @@ describe LogStash4r::Logger do
     Time.stub(now: now)
   end
 
-  %w(debug info warn error fatal).each do |severity|
-    it { should respond_to(severity.to_sym) }
+  context 'plain format' do
+    %w(udp tcp).each do |socket_type|
+      subject { LogStash4r::Logger.new(host, port, socket_type.to_sym, :plain) }
 
-    it 'writes message to socket' do
-      socket.should_receive(:write).with({
-        :@source => ::Socket::gethostname,
-        :@timestamp => now,
-        :@tags => [],
-        :@fields => {severity: severity.upcase},
-        :@message => 'test'
-      }.to_json + "\n")
-      subject.send(severity.to_sym, {:@message => 'test'})
+      %w(debug info warn error fatal).each do |severity|
+        it "writes a plain #{severity} message to the socket #{socket_type}" do
+          socket.should_receive(:write).with(/#{severity.upcase} test/)
+          subject.send(severity.to_sym, 'test')
+        end
+      end
+    end
+
+    context 'json format' do
+      %w(udp tcp).each do |socket_type|
+        subject { LogStash4r::Logger.new(host, port, socket_type.to_sym, :json) }
+
+        %w(debug info warn error fatal).each do |severity|
+          it "writes a json #{severity} message to the socket #{socket_type}" do
+            socket.should_receive(:write).with({
+              message: {data: 'test'},
+              severity: severity.upcase,
+              timestamp: now,
+            }.to_json)
+            subject.send(severity.to_sym, {data: 'test'})
+          end
+        end
+      end
+
+      context 'json event format' do
+        %w(udp tcp).each do |socket_type|
+          subject { LogStash4r::Logger.new(host, port, socket_type.to_sym, :json_event) }
+
+          %w(debug info warn error fatal).each do |severity|
+            it "writes a json #{severity} message to the socket #{socket_type}" do
+              socket.should_receive(:write).with({
+                :@source => ::Socket::gethostname,
+                :@timestamp => now,
+                :@tags => [],
+                :@fields => {severity: severity.upcase},
+                :@message => 'test'
+              }.to_json + "\n")
+              subject.send(severity.to_sym, {:@message => 'test'})
+            end
+          end
+        end
+      end
     end
   end
 end

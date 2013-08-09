@@ -2,41 +2,23 @@ require 'json'
 require 'socket'
 require 'logger'
 require 'logstash4r/socket'
+require 'logstash4r/formatters/plain'
+require 'logstash4r/formatters/json'
+require 'logstash4r/formatters/json_event'
 
 module LogStash4r
   class Logger < ::Logger
-    def initialize(host, port, socket_type = :udp)
+    def initialize(host, port, socket_type = :udp, format = :plain)
       super(LogStash4r::Socket.new(host, port, socket_type))
-    end
 
-    def format_message(severity, time, progname, message)
-      event = default_message(severity)
-
-      unless message.is_a?(Hash)
-        message = {:@message => message.to_s}
+      case format
+      when :plain
+        extend LogStash4r::Formatters::Plain
+      when :json
+        extend LogStash4r::Formatters::Json
+      when :json_event
+        extend LogStash4r::Formatters::JsonEvent
       end
-
-      message.each do |key, value|
-        if key == :@fields
-          event[:@fields] = value.merge(event[:@fields])
-        elsif (key.to_s[0] == '@')
-          event[key] = value
-        else
-          event[:@fields][key] = value
-        end
-      end
-
-      "#{event.to_json}\n"
-    end
-
-    def default_message(severity)
-      {
-        :@source => ::Socket::gethostname,
-        :@timestamp => Time.now,
-        :@tags => [],
-        :@fields => {severity: severity},
-        :@message => ''
-      }
     end
   end
 end
