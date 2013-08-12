@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = 'logstash-formatters'
-  s.version = '0.0.3'
-  s.date = '2013-08-08'
+  s.version = '1.0.0'
+  s.date = '2013-08-12'
   s.summary = 'Logstash Formatters'
   s.description= 'Logstash formatters for Ruby Logger'
   s.authors = ['Jesse Szwedko', 'Sheena McCoy']
