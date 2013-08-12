@@ -1,0 +1,11 @@
+---
+language: ruby
+env:
+  global:
+  - PATH=$HOME/bin:$PATH
+install: bundle install
+script: bundle exec rspec
+notifications:
+  email:
+    recipients:
+      - flintknappers+logstash4r@modcloth.com
