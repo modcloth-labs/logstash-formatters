@@ -8,4 +8,4 @@ script: bundle exec rspec
 notifications:
   email:
     recipients:
-      - flintknappers+logstash4r@modcloth.com
+      - flintknappers+logstash-formatters@modcloth.com

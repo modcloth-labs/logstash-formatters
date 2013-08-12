@@ -1,12 +1,12 @@
 Gem::Specification.new do |s|
-  s.name = 'logstash4r'
-  s.version = '0.0.2'
+  s.name = 'logstash-formatters'
+  s.version = '0.0.3'
   s.date = '2013-08-08'
-  s.summary = 'Logstash4r'
-  s.description= 'Logstash logger for ruby'
+  s.summary = 'Logstash Formatters'
+  s.description= 'Logstash formatters for Ruby Logger'
   s.authors = ['Jesse Szwedko', 'Sheena McCoy']
   s.email = ['j.szwedko@modcloth.com', 'sp.mccoy@modcloth.com']
-  s.files = ['lib/logstash4r.rb']
+  s.files = ['lib/logstash_formatters.rb']
   s.homepage = ''
   s.license = 'MIT'
 
