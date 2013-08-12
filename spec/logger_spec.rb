@@ -16,7 +16,7 @@ describe LogStash4r::Logger do
 
   context 'plain format' do
     %w(udp tcp).each do |socket_type|
-      subject { LogStash4r::Logger.new(host, port, socket_type.to_sym, :plain) }
+      subject { LogStash4r::Logger.new(host, port, socket_type.to_sym, LogStash4r::Formatters::Plain) }
 
       %w(debug info warn error fatal).each do |severity|
         it "writes a plain #{severity} message to the socket #{socket_type}" do
@@ -28,7 +28,7 @@ describe LogStash4r::Logger do
 
     context 'json format' do
       %w(udp tcp).each do |socket_type|
-        subject { LogStash4r::Logger.new(host, port, socket_type.to_sym, :json) }
+        subject { LogStash4r::Logger.new(host, port, socket_type.to_sym, LogStash4r::Formatters::Json) }
 
         %w(debug info warn error fatal).each do |severity|
           it "writes a json #{severity} message to the socket #{socket_type}" do
@@ -44,7 +44,7 @@ describe LogStash4r::Logger do
 
       context 'json event format' do
         %w(udp tcp).each do |socket_type|
-          subject { LogStash4r::Logger.new(host, port, socket_type.to_sym, :json_event) }
+          subject { LogStash4r::Logger.new(host, port, socket_type.to_sym, LogStash4r::Formatters::JsonEvent) }
 
           %w(debug info warn error fatal).each do |severity|
             it "writes a json #{severity} message to the socket #{socket_type}" do

@@ -8,17 +8,10 @@ require 'logstash4r/formatters/json_event'
 
 module LogStash4r
   class Logger < ::Logger
-    def initialize(host, port, socket_type = :udp, format = :plain)
-      super(LogStash4r::Socket.new(host, port, socket_type))
+    def initialize(host, port, socket_type = :udp, formatter = LogStash4r::Formatters::Plain)
+      extend formatter
 
-      case format
-      when :plain
-        extend LogStash4r::Formatters::Plain
-      when :json
-        extend LogStash4r::Formatters::Json
-      when :json_event
-        extend LogStash4r::Formatters::JsonEvent
-      end
+      super(LogStash4r::Socket.new(host, port, socket_type))
     end
   end
 end
